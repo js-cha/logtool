@@ -1,0 +1,21 @@
+2026-06-25 09:00:00 INFO Starting payment-service
+2026-06-25 09:00:01 INFO Loading configuration
+2026-06-25 09:00:02 INFO Configuration loaded
+2026-06-25 09:00:03 INFO Connecting to PostgreSQL
+2026-06-25 09:00:04 INFO Database connection established
+2026-06-25 09:00:05 INFO Starting HTTP server on :8080
+2026-06-25 09:00:06 INFO Health check passed
+2026-06-25 09:00:07 INFO Worker pool initialized
+2026-06-25 09:00:08 INFO Ready to accept requests
+2026-06-25 09:00:09 WARN Cache miss for customer:1001
+2026-06-25 09:00:10 INFO GET /payments 200
+2026-06-25 09:00:11 INFO GET /payments 200
+2026-06-25 09:00:12 INFO POST /payments 201
+2026-06-25 09:00:13 INFO POST /payments 201
+2026-06-25 09:00:14 WARN Slow database query (340ms)
+2026-06-25 09:00:15 INFO GET /payments/123 200
+2026-06-25 09:00:16 INFO GET /payments/124 200
+2026-06-25 09:00:17 INFO GET /payments/125 200
+2026-06-25 09:00:18 ERROR Failed to process payment id=125
+2026-06-25 09:00:19 INFO Retrying payment id=125
+2026-06-25 09:00:20 INFO Retry successful
