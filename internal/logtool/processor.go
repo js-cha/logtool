@@ -43,7 +43,7 @@ func worker(ctx context.Context, jobs <-chan string, results chan<- Result) {
 	}
 }
 
-func ProcessDirConcurrent(ctx context.Context, arg string, pool int) error {
+func ProcessDirConcurrent(ctx context.Context, arg string, pool int) (map[string]int, error) {
 	totals := make(map[string]int)
 	jobs := make(chan string, pool*2)
 	results := make(chan Result, pool*2)
@@ -68,7 +68,8 @@ func ProcessDirConcurrent(ctx context.Context, arg string, pool int) error {
 
 	err := filepath.WalkDir(arg, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
-			return err
+			fmt.Printf("skipping bad file, err: %v", err)
+			return nil
 		}
 
 		if d.IsDir() {
@@ -94,15 +95,13 @@ func ProcessDirConcurrent(ctx context.Context, arg string, pool int) error {
 	collectorWg.Wait()
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	PrintLogLevels(totals)
-
-	return nil
+	return totals, nil
 }
 
-func ProcessDirSync(ctx context.Context, arg string) error {
+func ProcessDirSync(ctx context.Context, arg string) (map[string]int, error) {
 	totals := make(map[string]int)
 
 	err := filepath.WalkDir(arg, func(path string, d fs.DirEntry, err error) error {
@@ -146,29 +145,20 @@ func ProcessDirSync(ctx context.Context, arg string) error {
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	PrintLogLevels(totals)
-
-	return nil
+	return totals, nil
 }
 
-func ProcessLogFile(ctx context.Context, path string) error {
+func ProcessLogFile(ctx context.Context, path string) (map[string]int, error) {
 	file, err := os.Open(path)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer file.Close()
 
-	counts, err := CountLogLevels(ctx, file)
-	if err != nil {
-		return err
-	}
-
-	PrintLogLevels(counts)
-
-	return nil
+	return CountLogLevels(ctx, file)
 }
 
 func MergeCounts(dst, src map[string]int) {

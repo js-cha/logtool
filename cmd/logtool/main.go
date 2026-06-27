@@ -48,22 +48,25 @@ func main() {
 				log.Fatal("worker count needs to be greater than zero")
 			}
 			fmt.Println("Number of workers: ", *workers)
-			err := logtool.ProcessDirConcurrent(ctx, *path, *workers)
+			counts, err := logtool.ProcessDirConcurrent(ctx, *path, *workers)
 			if err != nil {
 				fmt.Printf("processing failed: %v\n", err)
 			}
+			logtool.PrintLogLevels(counts)
 		case "sync":
-			err = logtool.ProcessDirSync(ctx, *path)
+			counts, err := logtool.ProcessDirSync(ctx, *path)
 			if err != nil {
 				fmt.Printf("processing failed: %v\n", err)
 			}
+			logtool.PrintLogLevels(counts)
 		default:
 			log.Fatal("invalid mode flag, use: 'concurrent' or 'sync'")
 		}
 	} else {
-		err := logtool.ProcessLogFile(ctx, *path)
+		counts, err := logtool.ProcessLogFile(ctx, *path)
 		if err != nil {
 			fmt.Printf("processing failed: %v\n", err)
 		}
+		logtool.PrintLogLevels(counts)
 	}
 }
